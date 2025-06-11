@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -11,6 +12,7 @@ import {
   openRegisterModel,
   openLoginModel,
 } from "../../../redux/slices/uiSlice";
+import { createUser } from "../../../redux/slices/authSlice";
 
 export default function Register() {
   const dispatch = useDispatch();
@@ -19,6 +21,27 @@ export default function Register() {
   useEffect(() => {
     setOpen(isregister);
   }, [isregister]);
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form Data:", formData);
+
+    // Example: check if passwords match
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    // Submit data to API here
+    dispatch(createUser(formData));
+  };
+
   return (
     <div>
       {/* <button
@@ -46,50 +69,85 @@ export default function Register() {
               <div className="">
                 <div className="">
                   <div className=" ">
-                    <form className="bg-white text-gray-500   md:p-6 p-4 text-left text-sm rounded-xl shadow-[0px_0px_10px_0px] shadow-black/10">
+                    <form
+                      onSubmit={handleSubmit}
+                      className="bg-white text-gray-500   md:p-6 p-4 text-left text-sm rounded-xl shadow-[0px_0px_10px_0px] shadow-black/10"
+                    >
                       <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
                         Sign Up
                       </h2>
                       <input
-                        id="fullName"
+                        id="fullname"
                         className="w-full border my-3 border-gray-500/30 outline-none rounded-full py-2.5 px-4"
                         type="text"
+                        name="fullName"
                         placeholder="Enter your Name"
                         required
+                        value={formData.fullName}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            [e.target.name]: e.target.value,
+                          })
+                        }
                       />
                       {/* <input
-                        id="mobileNo"
-                        className="w-full border my-3 border-gray-500/30 outline-none rounded-full py-2.5 px-4"
-                        type="number"
-                        placeholder="Enter your Number"
-                        required
-                      /> */}
+                          id="mobileNo"
+                          className="w-full border my-3 border-gray-500/30 outline-none rounded-full py-2.5 px-4"
+                          type="number"
+                          placeholder="Enter your Number"
+                          required
+                        /> */}
                       <input
                         id="email"
                         className="w-full border my-3 border-gray-500/30 outline-none rounded-full py-2.5 px-4"
                         type="email"
+                        name="email"
                         placeholder="Enter your email"
                         required
+                        value={formData.email}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            [e.target.name]: e.target.value,
+                          })
+                        }
                       />
                       <input
                         id="password"
                         className="w-full border my-3 border-gray-500/30 outline-none rounded-full py-2.5 px-4"
                         type="password"
+                        name="password"
                         placeholder="Enter your password"
                         required
+                        value={formData.password}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            [e.target.name]: e.target.value,
+                          })
+                        }
                       />
                       <input
                         id="confirmPassword"
                         className="w-full border my-3 border-gray-500/30 outline-none rounded-full py-2.5 px-4"
                         type="password"
+                        name="confirmPassword"
                         placeholder="Confirm password"
                         required
+                        value={formData.confirmPassword}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            [e.target.name]: e.target.value,
+                          })
+                        }
                       />
                       {/* <div className="text-right py-4">
-                        <a className="text-blue-600 underline" href="#">
-                          Forgot Password
-                        </a>
-                      </div> */}
+                          <a className="text-blue-600 underline" href="#">
+                            Forgot Password
+                          </a>
+                        </div> */}
                       <button
                         type="submit"
                         className="w-full mb-3 bg-indigo-500 hover:bg-indigo-600/90 active:scale-95 transition py-2.5 rounded-full text-white"

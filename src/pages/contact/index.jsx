@@ -5,7 +5,7 @@ import RightSide from "./layout/rightSide";
 const Contact = () => {
   return (
     <div>
-      <div className="flex flex-col flex-col-reverse items-center md:flex-row">
+      <div className="flex  flex-col-reverse items-center md:flex-row">
         <RightSide />
         <ContactForm />
       </div>
