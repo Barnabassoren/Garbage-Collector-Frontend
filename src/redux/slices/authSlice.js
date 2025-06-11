@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import authModel from "../../models/auth.model.js";
+import authModel from "../../models/auth.model";
 
 // ==============================
 // Async Thunks
@@ -12,9 +12,8 @@ export const createUser = createAsyncThunk(
       console.log(data);
 
       const response = await authModel.createUser(data);
-      console.log(response);
-
-      return response.data;
+      // console.log("Response from createUser:", response);
+      return response;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -39,10 +38,10 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       // ======create user========
-      .addCase(createUser.pending, (state) => {
+      .addCase(createUser.pending, state => {
         state.loading = true;
         state.error = null;
       })

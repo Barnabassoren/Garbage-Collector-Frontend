@@ -4,6 +4,7 @@ import CheckAuth from "./components/common/check-Auth";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./components/layouts/Auth/Login";
 import { Provider } from "react-redux";
+import { Toaster } from "react-hot-toast";
 import { store } from "./redux/store";
 import HomePage from "./pages/Home";
 import Contact from "./pages/contact";
@@ -50,6 +51,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
+      <Toaster />
       <RouterProvider router={router} />
       {/* <Login /> */}
       {/* <CheckAuth isAuthenticated={false} user={null} /> */}

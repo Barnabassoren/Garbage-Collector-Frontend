@@ -13,10 +13,11 @@ import {
   openLoginModel,
 } from "../../../redux/slices/uiSlice";
 import { createUser } from "../../../redux/slices/authSlice";
+import toast from "react-hot-toast";
 
 export default function Register() {
   const dispatch = useDispatch();
-  const isregister = useSelector((state) => state.ui.isRegisterModelOpen);
+  const isregister = useSelector(state => state.ui.isRegisterModelOpen);
   const [open, setOpen] = useState(false);
   useEffect(() => {
     setOpen(isregister);
@@ -28,9 +29,16 @@ export default function Register() {
     password: "",
     confirmPassword: "",
   });
-  const handleSubmit = (e) => {
+  const { loading, userData } = useSelector(state => state.user);
+  // console.log(userData);
+  // toast.success("User Created Successfully");
+  // if (userData.success == true) {
+  //   toast.success("User Created Successfully");
+  // }
+
+  const handleSubmit = async e => {
     e.preventDefault();
-    console.log("Form Data:", formData);
+    // console.log("Form Data:", formData);
 
     // Example: check if passwords match
     if (formData.password !== formData.confirmPassword) {
@@ -39,7 +47,19 @@ export default function Register() {
     }
 
     // Submit data to API here
-    dispatch(createUser(formData));
+    const response = await dispatch(createUser(formData));
+    // console.log(response?.payload?.success);
+    if (response?.payload?.success) {
+      toast.success("User Created Successfully");
+      setFormData({
+        fullName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+    } else {
+      toast.error(response?.payload?.message || "User creation failed");
+    }
   };
 
   return (
@@ -84,7 +104,7 @@ export default function Register() {
                         placeholder="Enter your Name"
                         required
                         value={formData.fullName}
-                        onChange={(e) =>
+                        onChange={e =>
                           setFormData({
                             ...formData,
                             [e.target.name]: e.target.value,
@@ -106,7 +126,7 @@ export default function Register() {
                         placeholder="Enter your email"
                         required
                         value={formData.email}
-                        onChange={(e) =>
+                        onChange={e =>
                           setFormData({
                             ...formData,
                             [e.target.name]: e.target.value,
@@ -121,7 +141,7 @@ export default function Register() {
                         placeholder="Enter your password"
                         required
                         value={formData.password}
-                        onChange={(e) =>
+                        onChange={e =>
                           setFormData({
                             ...formData,
                             [e.target.name]: e.target.value,
@@ -136,7 +156,7 @@ export default function Register() {
                         placeholder="Confirm password"
                         required
                         value={formData.confirmPassword}
-                        onChange={(e) =>
+                        onChange={e =>
                           setFormData({
                             ...formData,
                             [e.target.name]: e.target.value,
@@ -148,12 +168,30 @@ export default function Register() {
                             Forgot Password
                           </a>
                         </div> */}
-                      <button
-                        type="submit"
-                        className="w-full mb-3 bg-indigo-500 hover:bg-indigo-600/90 active:scale-95 transition py-2.5 rounded-full text-white"
-                      >
-                        Sign Up
-                      </button>
+                      {loading ? (
+                        <button
+                          class="inline-block rounded-full bg-green-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-green-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-green-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-green-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0 w-full"
+                          type="button"
+                        >
+                          <div
+                            role="status"
+                            class="inline-block h-3 w-3 mr-2 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                          >
+                            <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                              Loading...
+                            </span>
+                          </div>
+                          Loading
+                        </button>
+                      ) : (
+                        <button
+                          type="submit"
+                          className="w-full mb-3 bg-indigo-500 hover:bg-indigo-600/90 active:scale-95 transition py-2.5 rounded-full text-white"
+                        >
+                          Sign Up
+                        </button>
+                      )}
+
                       <p className="text-center mt-4">
                         Already have an Account ?{" "}
                         <button
